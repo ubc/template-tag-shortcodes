@@ -141,7 +141,7 @@ function shortcode_comments_link() {
  * @since 0.1.1
  */
 function shortcode_the_terms( $attr ) {
-	if ( !$attr['taxonomy'] )
+	if ( !isset( $attr['taxonomy'] ) )
 		$attr['taxonomy'] = 'post_tag';
 
 	return get_the_term_list( $attr['id'], $attr['taxonomy'], $attr['before'], $attr['separator'], $attr['after'] );
@@ -209,11 +209,11 @@ function shortcode_list_pages( $attr ) {
 	/*
 	* Make sure we have boolean values instead of strings when needed
 	*/
-	if ( $attr['title_li'] )
+	if ( isset( $attr['title_li'] ) )
 		$attr['title_li'] = shortcode_string_to_bool( $attr['title_li'] );
-	if ( $attr['hierarchical'] )
+	if ( isset( $attr['hierarchical'] ) )
 		$attr['hierarchical'] = shortcode_string_to_bool( $attr['hierarchical'] );
-	if ( $attr['show_date'] )
+	if ( isset( $attr['show_date'] ) )
 		$attr['show_date'] = shortcode_string_to_bool( $attr['show_date'] );
 
 	$attr['child_of'] = (int)$attr['child_of'];
@@ -236,16 +236,16 @@ function shortcode_dropdown_pages( $attr ) {
 	/*
 	* Make sure we have boolean values instead of strings when needed
 	*/
-	if ( $attr['hierarchical'] )
+	if ( isset( $attr['hierarchical'] ) )
 		$attr['hierarchical'] = shortcode_string_to_bool( $attr['hierarchical'] );
-	if ( $attr['show_date'] )
+	if ( isset( $attr['show_date'] ) )
 		$attr['show_date'] = shortcode_string_to_bool( $attr['show_date'] );
 
 	$attr['child_of'] = (int)$attr['child_of'];
 	$attr['depth'] = (int)$attr['depth'];
-	if ( $attr['selected'] )
+	if ( isset( $attr['selected'] ) )
 		$attr['selected'] = (int)$attr['selected'];
-	if ( $attr['tab_index'] )
+	if ( isset( $attr['tab_index'] ) )
 		$attr['tab_index'] = (int)$attr['tab_index'];
 	$attr['echo'] = false;
 
@@ -267,17 +267,17 @@ function shortcode_list_categories( $attr ) {
 	/*
 	* Make sure certain we have boolean values instead of strings when needed
 	*/
-	if ( $attr['title_li'] )
+	if ( isset ( $attr['title_li'] ) )
 		$attr['title_li'] = shortcode_string_to_bool( $attr['title_li'] );
-	if ( $attr['hierarchical'] )
+	if ( isset ( $attr['hierarchical'] ) )
 		$attr['hierarchical'] = shortcode_string_to_bool( $attr['hierarchical'] );
-	if ( $attr['use_desc_for_title'] )
+	if ( isset ( $attr['use_desc_for_title'] ) )
 		$attr['use_desc_for_title'] = shortcode_string_to_bool( $attr['use_desc_for_title'] );
-	if ( $attr['hide_empty'] )
+	if ( isset ( $attr['hide_empty'] ) )
 		$attr['hide_empty'] = shortcode_string_to_bool( $attr['hide_empty'] );
-	if ( $attr['show_count'] )
+	if ( isset ( $attr['show_count'] ) )
 		$attr['show_count'] = shortcode_string_to_bool( $attr['show_count'] );
-	if ( $attr['show_last_update'] )
+	if ( isset ( $attr['show_last_update'] ) )
 		$attr['show_last_update'] = shortcode_string_to_bool( $attr['show_last_update'] );
 
 	$attr['child_of'] = (int)$attr['child_of'];
@@ -302,20 +302,20 @@ function shortcode_dropdown_categories( $attr ) {
 	/*
 	* Make sure certain we have boolean values instead of strings when needed
 	*/
-	if ( $attr['hierarchical'] )
+	if ( isset( $attr['hierarchical'] ) )
 		$attr['hierarchical'] = shortcode_string_to_bool( $attr['hierarchical'] );
-	if ( $attr['hide_empty'] )
+	if ( isset( $attr['hide_empty'] ) )
 		$attr['hide_empty'] = shortcode_string_to_bool( $attr['hide_empty'] );
-	if ( $attr['show_count'] )
+	if ( isset( $attr['show_count'] ) )
 		$attr['show_count'] = shortcode_string_to_bool( $attr['show_count'] );
-	if ( $attr['show_last_update'] )
+	if ( isset( $attr['show_last_update'] ) )
 		$attr['show_last_update'] = shortcode_string_to_bool( $attr['show_last_update'] );
 
 	$attr['child_of'] = (int)$attr['child_of'];
 	$attr['depth'] = (int)$attr['depth'];
-	if ( $attr['selected'] )
+	if ( isset( $attr['selected'] ) )
 		$attr['selected'] = (int)$attr['selected'];
-	if ( $attr['tab_index'] )
+	if ( isset( $attr['tab_index'] ) )
 		$attr['tab_index'] = (int)$attr['tab_index'];
 	$attr['echo'] = false;
 
@@ -334,9 +334,12 @@ function shortcode_dropdown_categories( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_the_category( $attr ) {
-	if ( $attr['post_id'] )
+	if ( isset( $attr['post_id'] ) )
 		$attr['post_id'] = (int)$attr['post_id'];
-
+	
+	if(empty($attr['post_id']))
+		$attr['post_id'] = false;
+		
 	return get_the_category_list( $attr['separator'], $attr['parents'], $attr['post_id'] );
 }
 
@@ -349,7 +352,7 @@ function shortcode_the_category( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_get_category_link( $attr ) {
-	if ( $attr['category_id'] )
+	if ( isset( $attr['category_id'] ) )
 		$attr['category_id'] = (int)$attr['category_id'];
 	return get_category_link( $attr['category_id'] );
 }
@@ -363,7 +366,7 @@ function shortcode_get_category_link( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_get_tag_link( $attr ) {
-	if ( $attr['tag_id'] )
+	if ( isset( $attr['tag_id'] ) )
 		$attr['tag_id'] = (int)$attr['tag_id'];
 	return get_tag_link( $attr['tag_id'] );
 }
@@ -379,11 +382,11 @@ function shortcode_get_tag_link( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_tag_cloud( $attr ) {
-	if ( $attr['number'] )
+	if ( isset( $attr['number'] ) )
 		$attr['number'] = (int)$attr['number'];
-	if ( $attr['largest'] )
+	if ( isset( $attr['largest'] ) )
 		$attr['largest'] = (int)$attr['largest'];
-	if ( $attr['smallest'] )
+	if ( isset( $attr['smallest'] ) )
 		$attr['smallest'] = (int)$attr['smallest'];
 
 	$attr['echo'] = false;
@@ -418,24 +421,24 @@ function shortcode_list_bookmarks( $attr ) {
 	/*
 	* Make sure we have boolean values instead of strings when needed
 	*/
-	if ( $attr['title_li'] )
+	if ( isset( $attr['title_li'] ) )
 		$attr['title_li'] = shortcode_string_to_bool( $attr['title_li'] );
-	if ( $attr['categorize'] )
+	if ( isset( $attr['categorize'] ) )
 		$attr['categorize'] = shortcode_string_to_bool( $attr['categorize'] );
-	if ( $attr['show_description'] )
+	if ( isset( $attr['show_description'] ) )
 		$attr['show_description'] = shortcode_string_to_bool( $attr['show_description'] );
-	if ( $attr['hide_invisible'] )
+	if ( isset( $attr['hide_invisible'] ) )
 		$attr['hide_invisible'] = shortcode_string_to_bool( $attr['hide_invisible'] );
-	if ( $attr['show_rating'] )
+	if ( isset( $attr['show_rating'] ) )
 		$attr['show_rating'] = shortcode_string_to_bool( $attr['show_rating'] );
-	if ( $attr['show_updated'] )
+	if ( isset( $attr['show_updated'] ) )
 		$attr['show_updated'] = shortcode_string_to_bool( $attr['show_updated'] );
-	if ( $attr['show_images'] )
+	if ( isset( $attr['show_images'] ) )
 		$attr['show_images'] = shortcode_string_to_bool( $attr['show_images'] );
-	if ( $attr['show_private'] )
+	if ( isset( $attr['show_private'] ) )
 		$attr['show_private'] = shortcode_string_to_bool( $attr['show_private'] );
 
-	if ( $attr['limit'] )
+	if ( isset( $attr['limit'] ) )
 		$attr['limit'] = (int)$attr['limit'];
 
 	$attr['echo'] = false;
@@ -456,10 +459,10 @@ function shortcode_get_archives( $attr ) {
 	/*
 	* Make sure certain we have boolean values instead of strings when needed
 	*/
-	if ( $attr['show_post_count'] )
+	if ( isset( $attr['show_post_count'] ) )
 		$attr['show_post_count'] = shortcode_string_to_bool( $attr['show_post_count'] );
 
-	if ( $attr['limit'] )
+	if ( isset( $attr['limit'] ) )
 		$attr['limit'] = (int)$attr['limit'];
 
 	$attr['echo'] = false;
@@ -584,6 +587,7 @@ function shortcode_get_permalink( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_the_date( $attr ) {
+	$attr = wp_parse_args( $attr, array( 'format' => '', 'before' => '', 'after' => '' ) );
 	return the_date( $attr['format'], $attr['before'], $attr['after'], false );
 
 }
@@ -638,13 +642,13 @@ function shortcode_list_authors( $attr) {
 	/*
 	* Make sure we have boolean values instead of strings when needed
 	*/
-	if ( $attr['optioncount'] )
+	if ( isset( $attr['optioncount'] ) )
 		$attr['optioncount'] = shortcode_string_to_bool( $attr['optioncount'] );
-	if ( $attr['exclude_admin'] )
+	if ( isset( $attr['exclude_admin'] ) )
 		$attr['exclude_admin'] = shortcode_string_to_bool( $attr['exclude_admin'] );
-	if ( $attr['show_fullname'] )
+	if ( isset( $attr['show_fullname'] ) )
 		$attr['show_fullname'] = shortcode_string_to_bool( $attr['show_fullname'] );
-	if ( $attr['hide_empty'] )
+	if ( isset( $attr['hide_empty'] ) )
 		$attr['hide_empty'] = shortcode_string_to_bool( $attr['hide_empty'] );
 
 	$attr['echo'] = false;
