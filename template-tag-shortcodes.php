@@ -141,8 +141,14 @@ function shortcode_comments_link() {
  * @since 0.1.1
  */
 function shortcode_the_terms( $attr ) {
-	if ( !isset( $attr['taxonomy'] ) )
-		$attr['taxonomy'] = 'post_tag';
+
+	$attr = wp_parse_args( $attr, array( 
+		'id' => get_the_ID(),
+		'taxonomy' => 'post_tag', 
+		'before' => '', 
+		'separator' => '', 
+		'after' => ''
+	) );
 
 	return get_the_term_list( $attr['id'], $attr['taxonomy'], $attr['before'], $attr['separator'], $attr['after'] );
 }
@@ -154,6 +160,7 @@ function shortcode_the_terms( $attr ) {
  * @since 0.1.1
  */
 function shortcode_category_description( $attr ) {
+	$attr = wp_parse_args( $attr, array( 'category' => 1 ) );
 	return category_description( $attr['category'] );
 }
 
@@ -164,6 +171,7 @@ function shortcode_category_description( $attr ) {
  * @since 0.1.1
  */
 function shortcode_tag_description( $attr ) {
+	$attr = wp_parse_args( $attr, array( 'tag'  => 1 ) );
 	return tag_description( $attr['tag'] );
 }
 
@@ -174,6 +182,7 @@ function shortcode_tag_description( $attr ) {
  * @since 0.1.1
  */
 function shortcode_term_description( $attr ) {
+	$attr = wp_parse_args( $attr, array( 'term'  => null, 'taxonomy' => null ) );
 	return term_description( $attr['term'], $attr['taxonomy'] );
 }
 
@@ -188,6 +197,7 @@ function shortcode_term_description( $attr ) {
  * @since 0.1.1
  */
 function shortcode_the_author_meta( $attr ) {
+	$attr = wp_parse_args( $attr, array( 'field'  => 'user_login', 'user_id' => null ) );
 	$author_meta = get_the_author_meta( $attr['field'], $attr['user_id'] );
 	if ( $attr['field'] == 'email' || $attr['field'] == 'user_email' )
 
@@ -209,16 +219,29 @@ function shortcode_list_pages( $attr ) {
 	/*
 	* Make sure we have boolean values instead of strings when needed
 	*/
-	if ( isset( $attr['title_li'] ) )
-		$attr['title_li'] = shortcode_string_to_bool( $attr['title_li'] );
 	if ( isset( $attr['hierarchical'] ) )
 		$attr['hierarchical'] = shortcode_string_to_bool( $attr['hierarchical'] );
 	if ( isset( $attr['show_date'] ) )
 		$attr['show_date'] = shortcode_string_to_bool( $attr['show_date'] );
 
-	$attr['child_of'] = (int)$attr['child_of'];
-	$attr['depth'] = (int)$attr['depth'];
-	$attr['echo'] = false;
+	$attr = wp_parse_args( $attr, array(
+		'authors'      => '',
+		'child_of'     => 0,
+		'date_format'  => get_option('date_format'),
+		'depth'        => 0,
+		'echo'         => false,
+		'exclude'      => '',
+		'include'      => '',
+		'link_after'   => '',
+		'link_before'  => '',
+		'post_type'    => 'page',
+		'post_status'  => 'publish',
+		'show_date'    => '',
+		'sort_column'  => 'menu_order, post_title',
+		'sort_order'   => '',
+		'title_li'     => __('Pages'), 
+		'walker'       => ''
+	) );
 
 	return wp_list_pages( $attr );
 }
@@ -236,18 +259,20 @@ function shortcode_dropdown_pages( $attr ) {
 	/*
 	* Make sure we have boolean values instead of strings when needed
 	*/
-	if ( isset( $attr['hierarchical'] ) )
-		$attr['hierarchical'] = shortcode_string_to_bool( $attr['hierarchical'] );
 	if ( isset( $attr['show_date'] ) )
 		$attr['show_date'] = shortcode_string_to_bool( $attr['show_date'] );
 
-	$attr['child_of'] = (int)$attr['child_of'];
-	$attr['depth'] = (int)$attr['depth'];
-	if ( isset( $attr['selected'] ) )
-		$attr['selected'] = (int)$attr['selected'];
-	if ( isset( $attr['tab_index'] ) )
-		$attr['tab_index'] = (int)$attr['tab_index'];
-	$attr['echo'] = false;
+	$attr = wp_parse_args( $attr, array(
+		'depth'                 => 0,
+		'child_of'              => 0,
+		'selected'              => 0,
+		'echo'                  => false,
+		'name'                  => 'page_id',
+		'id'                    => null, // string
+		'show_option_none'      => null, // string
+		'show_option_no_change' => null, // string
+		'option_none_value'     => null, // string
+	) );
 
 	$output = wp_dropdown_pages( $attr );
 
@@ -280,9 +305,32 @@ function shortcode_list_categories( $attr ) {
 	if ( isset ( $attr['show_last_update'] ) )
 		$attr['show_last_update'] = shortcode_string_to_bool( $attr['show_last_update'] );
 
-	$attr['child_of'] = (int)$attr['child_of'];
-	$attr['depth'] = (int)$attr['depth'];
-	$attr['echo'] = false;
+	$attr = wp_parse_args( $attr, array(
+		'show_option_all'    => '',
+		'orderby'            => 'name',
+		'order'              => 'ASC',
+		'style'              => 'list',
+		'show_count'         => 0,
+		'hide_empty'         => 1,
+		'use_desc_for_title' => 1,
+		'child_of'           => 0,
+		'feed'               => '',
+		'feed_type'          => '',
+		'feed_image'         => '',
+		'exclude'            => '',
+		'exclude_tree'       => '',
+		'include'            => '',
+		'hierarchical'       => 1,
+		'title_li'           => __( 'Categories' ),
+		'show_option_none'   => __( '' ),
+		'number'             => null,
+		'echo'               => false,
+		'depth'              => 0,
+		'current_category'   => 0,
+		'pad_counts'         => 0,
+		'taxonomy'           => 'category',
+		'walker'             => null
+	) );
 
 	$output = wp_list_categories( $attr );
 
@@ -311,13 +359,26 @@ function shortcode_dropdown_categories( $attr ) {
 	if ( isset( $attr['show_last_update'] ) )
 		$attr['show_last_update'] = shortcode_string_to_bool( $attr['show_last_update'] );
 
-	$attr['child_of'] = (int)$attr['child_of'];
-	$attr['depth'] = (int)$attr['depth'];
-	if ( isset( $attr['selected'] ) )
-		$attr['selected'] = (int)$attr['selected'];
-	if ( isset( $attr['tab_index'] ) )
-		$attr['tab_index'] = (int)$attr['tab_index'];
-	$attr['echo'] = false;
+	$attr = wp_parse_args( $attr, array(
+		'show_option_all'    => '',
+		'show_option_none'   => '',
+		'orderby'            => 'ID', 
+		'order'              => 'ASC',
+		'show_count'         => 0,
+		'hide_empty'         => 1, 
+		'child_of'           => 0,
+		'exclude'            => '',
+		'echo'               => false,
+		'selected'           => 0,
+		'hierarchical'       => 0, 
+		'name'               => 'cat',
+		'id'                 => '',
+		'class'              => 'postform',
+		'depth'              => 0,
+		'tab_index'          => 0,
+		'taxonomy'           => 'category',
+		'hide_if_empty'      => false,
+	) );
 
 	$output = wp_dropdown_categories( $attr );
 
@@ -334,11 +395,8 @@ function shortcode_dropdown_categories( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_the_category( $attr ) {
-	if ( isset( $attr['post_id'] ) )
-		$attr['post_id'] = (int)$attr['post_id'];
-	
-	if(empty($attr['post_id']))
-		$attr['post_id'] = false;
+
+	$attr = wp_parse_args( $attr, array( 'separator'  => '', 'parents'  => '', 'post_id'  => false,  ) );
 		
 	return get_the_category_list( $attr['separator'], $attr['parents'], $attr['post_id'] );
 }
@@ -352,8 +410,8 @@ function shortcode_the_category( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_get_category_link( $attr ) {
-	if ( isset( $attr['category_id'] ) )
-		$attr['category_id'] = (int)$attr['category_id'];
+	$attr = wp_parse_args( $attr, array( 'category_id'  => null ) );
+
 	return get_category_link( $attr['category_id'] );
 }
 
@@ -366,8 +424,8 @@ function shortcode_get_category_link( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_get_tag_link( $attr ) {
-	if ( isset( $attr['tag_id'] ) )
-		$attr['tag_id'] = (int)$attr['tag_id'];
+	$attr = wp_parse_args( $attr, array( 'tag_id'  => null ) );
+
 	return get_tag_link( $attr['tag_id'] );
 }
 
@@ -382,12 +440,24 @@ function shortcode_get_tag_link( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_tag_cloud( $attr ) {
-	if ( isset( $attr['number'] ) )
-		$attr['number'] = (int)$attr['number'];
-	if ( isset( $attr['largest'] ) )
-		$attr['largest'] = (int)$attr['largest'];
-	if ( isset( $attr['smallest'] ) )
-		$attr['smallest'] = (int)$attr['smallest'];
+
+	$attr = wp_parse_args( $attr, array(
+		'smallest'                  => 8, 
+		'largest'                   => 22,
+		'unit'                      => 'pt', 
+		'number'                    => 45,  
+		'format'                    => 'flat',
+		'separator'                 => "\n",
+		'orderby'                   => 'name', 
+		'order'                     => 'ASC',
+		'exclude'                   => null, 
+		'include'                   => null, 
+		'topic_count_text_callback' => 'default_topic_count_text',
+		'link'                      => 'view', 
+		'taxonomy'                  => 'post_tag', 
+		'echo'                      => false,
+		'child_of'                  => null, // see Note!
+	) );
 
 	$attr['echo'] = false;
 
@@ -405,6 +475,7 @@ function shortcode_tag_cloud( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_the_tags( $attr ) {
+	$attr = wp_parse_args( $attr, array( 'before'  => '', 'separator' => '', 'after' => '' ) );
 	return get_the_tag_list( $attr['before'], $attr['separator'], $attr['after'] );
 }
 
@@ -438,8 +509,26 @@ function shortcode_list_bookmarks( $attr ) {
 	if ( isset( $attr['show_private'] ) )
 		$attr['show_private'] = shortcode_string_to_bool( $attr['show_private'] );
 
-	if ( isset( $attr['limit'] ) )
-		$attr['limit'] = (int)$attr['limit'];
+	$attr = wp_parse_args( $attr, array(
+		'orderby'          => 'name',
+		'order'            => 'ASC',
+		'limit'            => -1,
+		'category'         => ' ',
+		'exclude_category' => ' ',
+		'category_name'    => ' ',
+		'hide_invisible'   => 1,
+		'show_updated'     => 0,
+		'echo'             => 0,
+		'categorize'       => 1,
+		'title_li'         => __('Bookmarks'),
+		'title_before'     => '<h2>',
+		'title_after'      => '</h2>',
+		'category_orderby' => 'name',
+		'category_order'   => 'ASC',
+		'class'            => 'linkcat',
+		'category_before'  => '<li id=%id class=%class>',
+		'category_after'   => '</li>'
+	) );
 
 	$attr['echo'] = false;
 
@@ -462,8 +551,16 @@ function shortcode_get_archives( $attr ) {
 	if ( isset( $attr['show_post_count'] ) )
 		$attr['show_post_count'] = shortcode_string_to_bool( $attr['show_post_count'] );
 
-	if ( isset( $attr['limit'] ) )
-		$attr['limit'] = (int)$attr['limit'];
+	$attr = wp_parse_args( $attr, array(
+		'type'            => 'monthly',
+		'limit'           => '',
+		'format'          => 'html', 
+		'before'          => '',
+		'after'           => '',
+		'show_post_count' => false,
+		'echo'            => 0,
+		'order'           => 'DESC'
+	) );
 
 	$attr['echo'] = false;
 
@@ -480,6 +577,7 @@ function shortcode_get_archives( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_bloginfo( $attr ) {
+	$attr = wp_parse_args( $attr, array( 'show'  => 'name' ) );
 	return get_bloginfo( $attr['show'], 'display' );
 }
 
@@ -513,6 +611,7 @@ function shortcode_logout_url( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_login_url( $attr ) {
+	$attr = wp_parse_args( $attr, array( 'redirect'  => '' ) );
 	return wp_login_url( $attr['redirect'] );
 }
 
@@ -536,6 +635,7 @@ function shortcode_the_ID() {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_the_title( $attr ) {
+	$attr = wp_parse_args( $attr, array( 'before'  => '', 'after' => '', 'display' => false ) );
 	$attr['display'] = false;
 	return the_title( $attr['before'], $attr['after'], $attr['display'] );
 }
@@ -549,8 +649,9 @@ function shortcode_the_title( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_the_title_attribute( $attr ) {
+	$attr = wp_parse_args( $attr, array( 'before'  => '', 'after'  => '', 'echo'  => false, 'post' => null  ) );
 	$attr['echo'] = false;
-	return the_title_attribute( array( 'before' => $attr['before'], 'after' => $attr['after'], 'echo' => $attr['echo'] ) );
+	return the_title_attribute( $attr );
 }
 
 /**
@@ -561,9 +662,10 @@ function shortcode_the_title_attribute( $attr ) {
  *
  * @since 0.1
  */
-function shortcode_the_permalink() {
+function shortcode_the_permalink( $attr ) {
 	global $post;
-	return get_permalink( $post->ID );
+	$attr = wp_parse_args( $attr, array( 'post'  => $post->ID, 'leavename' => false ) );
+	return get_permalink( $attr['post'], $attr['leavename'] );
 }
 
 /**
@@ -575,6 +677,8 @@ function shortcode_the_permalink() {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_get_permalink( $attr ) {
+	global $post;
+	$attr = wp_parse_args( $attr, array( 'post'  => $post->ID, 'leavename' => false ) );
 	return get_permalink( $attr['id'] );
 }
 
@@ -602,7 +706,8 @@ function shortcode_the_date( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_the_time( $attr ) {
-	return get_the_time( $attr['format'] );
+	$attr = wp_parse_args( $attr, array( 'format'  => null, 'post' => null ) );
+	return get_the_time( $attr['format'], $attr['post'] );
 }
 
 /**
@@ -614,6 +719,7 @@ function shortcode_the_time( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_the_modified_date( $attr ) {
+	$attr = wp_parse_args( $attr, array( 'format'  => '' ) );
 	return get_the_modified_date( $attr['format'] );
 }
 
@@ -626,6 +732,7 @@ function shortcode_the_modified_date( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_the_modified_time( $attr ) {
+	$attr = wp_parse_args( $attr, array( 'format'  => null ) );
 	return get_the_modified_time( $attr['format'] );
 }
 
@@ -650,6 +757,24 @@ function shortcode_list_authors( $attr) {
 		$attr['show_fullname'] = shortcode_string_to_bool( $attr['show_fullname'] );
 	if ( isset( $attr['hide_empty'] ) )
 		$attr['hide_empty'] = shortcode_string_to_bool( $attr['hide_empty'] );
+
+	$attr = wp_parse_args( $attr, array(
+		'orderby'       => 'name', 
+		'order'         => 'ASC', 
+		'number'        => null,
+		'optioncount'   => false, 
+		'exclude_admin' => true, 
+		'show_fullname' => false,
+		'hide_empty'    => true,
+		'echo'          => false,
+		'feed'          => '', 
+		'feed_image'    => '',
+		'feed_type'     => '',
+		'style'         => 'list',
+		'html'          => true,
+		'exclude'       => '',
+		'include'       => ''
+	) );
 
 	$attr['echo'] = false;
 
@@ -844,10 +969,10 @@ function shortcode_the_author_posts_link() {
  */
 function shortcode_string_to_bool( $value ) {
 
-	if ( $value == 'true' || $value == 'TRUE' || $value == '1' ) 
+	if ( strtolower( $value ) == 'true' || $value == '1' ) 
 		return true;
 
-	elseif ( $value == 'false' || $value == 'FALSE' || $value == '0' )
+	elseif ( strtolower( $value ) == 'false' || $value == '0' )
 		return false;
 
 	else
