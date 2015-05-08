@@ -3,7 +3,7 @@
  * Plugin Name: Template Tag Shortcodes
  * Plugin URI: http://justintadlock.com/archives/2009/03/24/template-tag-shortcodes-wordpress-plugin
  * Description: Turns many of the WordPress template tags into shortcodes that can be used in posts and pages.
- * Version: 0.1.1
+ * Version: 0.2.1
  * Author: Justin Tadlock
  * Author URI: http://justintadlock.com
  *
