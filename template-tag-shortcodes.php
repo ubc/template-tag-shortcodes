@@ -536,9 +536,9 @@ function shortcode_the_ID() {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_the_title( $attr ) {
-	if ( ! is_array( $attr ) ) {
-		return $attr;
-	}
+
+	$attr = ( isset( $attr ) && is_array( $attr ) ) ? wp_parse_args( $attr, array( 'before'  => '', 'after' => '', 'display' => false ) ) : array();
+
 	$attr['display'] = false;
 	return the_title( $attr['before'], $attr['after'], $attr['display'] );
 }
