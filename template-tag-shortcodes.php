@@ -609,7 +609,10 @@ function shortcode_the_date( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_the_time( $attr ) {
-	return get_the_time( $attr['format'] );
+
+	$format = ( is_array( $attr ) && isset( $attr['format'] ) ) ? $attr['format'] : null;
+
+	return get_the_time( $format );
 }
 
 /**
@@ -621,7 +624,10 @@ function shortcode_the_time( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_the_modified_date( $attr ) {
-	return get_the_modified_date( $attr['format'] );
+
+	$format = ( is_array( $attr ) && isset( $attr['format'] ) ) ? $attr['format'] : null;
+
+	return get_the_modified_date( $format );
 }
 
 /**
@@ -633,7 +639,10 @@ function shortcode_the_modified_date( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_the_modified_time( $attr ) {
-	return get_the_modified_time( $attr['format'] );
+
+	$format = ( is_array( $attr ) && isset( $attr['format'] ) ) ? $attr['format'] : null;
+
+	return get_the_modified_time( $format );
 }
 
 /**
