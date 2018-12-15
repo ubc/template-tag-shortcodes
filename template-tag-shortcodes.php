@@ -502,7 +502,9 @@ function shortcode_allowed_tags() {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_logout_url( $attr ) {
-	return wp_logout_url( $attr['redirect'] );
+	$redirect = ( is_array( $attr ) && isset( $attr['redirect'] ) ) ? $attr['redirect'] : null;
+
+	return wp_logout_url( $redirect );
 }
 
 /**
@@ -513,7 +515,9 @@ function shortcode_logout_url( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_login_url( $attr ) {
-	return wp_login_url( $attr['redirect'] );
+	$redirect = ( is_array( $attr ) && isset( $attr['redirect'] ) ) ? $attr['redirect'] : null;
+
+	return wp_login_url( $redirect );
 }
 
 /**
