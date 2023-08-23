@@ -141,6 +141,18 @@ function shortcode_comments_link() {
  * @since 0.1.1
  */
 function shortcode_the_terms( $attr ) {
+
+	$attr = wp_parse_args(
+		$attr,
+		array(
+			'taxonomy'  => null,
+			'id'        => null,
+			'before'    => null,
+			'separator' => null,
+			'after'     => null,
+		)
+	);
+
 	if ( !isset( $attr['taxonomy'] ) )
 		$attr['taxonomy'] = 'post_tag';
 
@@ -154,6 +166,14 @@ function shortcode_the_terms( $attr ) {
  * @since 0.1.1
  */
 function shortcode_category_description( $attr ) {
+
+	$attr = wp_parse_args(
+		$attr,
+		array(
+			'category' => null,
+		)
+	);
+
 	return category_description( $attr['category'] );
 }
 
@@ -164,6 +184,14 @@ function shortcode_category_description( $attr ) {
  * @since 0.1.1
  */
 function shortcode_tag_description( $attr ) {
+
+	$attr = wp_parse_args(
+		$attr,
+		array(
+			'tag' => null,
+		)
+	);
+
 	return tag_description( $attr['tag'] );
 }
 
@@ -174,6 +202,15 @@ function shortcode_tag_description( $attr ) {
  * @since 0.1.1
  */
 function shortcode_term_description( $attr ) {
+
+	$attr = wp_parse_args(
+		$attr,
+		array(
+			'taxonomy' => null,
+			'term' => null,
+		)
+	);
+
 	return term_description( $attr['term'], $attr['taxonomy'] );
 }
 
@@ -188,10 +225,19 @@ function shortcode_term_description( $attr ) {
  * @since 0.1.1
  */
 function shortcode_the_author_meta( $attr ) {
-	$author_meta = get_the_author_meta( $attr['field'], $attr['user_id'] );
-	if ( $attr['field'] == 'email' || $attr['field'] == 'user_email' )
 
+	$attr = wp_parse_args(
+		$attr,
+		array(
+			'field'   => null,
+			'user_id' => null,
+		)
+	);
+
+	$author_meta = get_the_author_meta( $attr['field'], $attr['user_id'] );
+	if ( $attr['field'] === 'email' || $attr['field'] === 'user_email' ) {
 		$author_meta = antispambot( $author_meta );
+	}
 
 	return $author_meta;
 }
@@ -205,6 +251,18 @@ function shortcode_the_author_meta( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_list_pages( $attr ) {
+
+	$attr = wp_parse_args(
+		$attr,
+		array(
+			'title_li'     => null,
+			'hierarchical' => null,
+			'show_date'    => null,
+			'child_of'     => null,
+			'depth'        => null,
+			'echo'         => null,
+		)
+	);
 
 	/*
 	* Make sure we have boolean values instead of strings when needed
@@ -232,6 +290,19 @@ function shortcode_list_pages( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_dropdown_pages( $attr ) {
+
+	$attr = wp_parse_args(
+		$attr,
+		array(
+			'selected'     => null,
+			'hierarchical' => null,
+			'show_date'    => null,
+			'child_of'     => null,
+			'depth'        => null,
+			'echo'         => null,
+			'tab_index'    => null,
+		)
+	);
 
 	/*
 	* Make sure we have boolean values instead of strings when needed
@@ -263,6 +334,21 @@ function shortcode_dropdown_pages( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_list_categories( $attr ) {
+
+	$attr = wp_parse_args(
+		$attr,
+		array(
+			'title_li'          => null,
+			'hierarchical'       => null,
+			'use_desc_for_title' => null,
+			'child_of'           => null,
+			'depth'              => null,
+			'echo'               => null,
+			'hide_empty'         => null,
+			'show_count'         => null,
+			'show_last_update'   => null,
+		)
+	);
 
 	/*
 	* Make sure certain we have boolean values instead of strings when needed
@@ -299,6 +385,21 @@ function shortcode_list_categories( $attr ) {
  */
 function shortcode_dropdown_categories( $attr ) {
 
+	$attr = wp_parse_args(
+		$attr,
+		array(
+			'selected'         => null,
+			'hierarchical'     => null,
+			'tab_index'        => null,
+			'child_of'         => null,
+			'depth'            => null,
+			'echo'             => null,
+			'hide_empty'       => null,
+			'show_count'       => null,
+			'show_last_update' => null,
+		)
+	);
+
 	/*
 	* Make sure certain we have boolean values instead of strings when needed
 	*/
@@ -334,6 +435,16 @@ function shortcode_dropdown_categories( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_the_category( $attr ) {
+
+	$attr = wp_parse_args(
+		$attr,
+		array(
+			'separator' => null,
+			'parents'   => null,
+			'post_id'   => null,
+		)
+	);
+
 	if ( isset( $attr['post_id'] ) )
 		$attr['post_id'] = (int)$attr['post_id'];
 
@@ -352,6 +463,14 @@ function shortcode_the_category( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_get_category_link( $attr ) {
+
+	$attr = wp_parse_args(
+		$attr,
+		array(
+			'category_id' => null,
+		)
+	);
+
 	if ( isset( $attr['category_id'] ) )
 		$attr['category_id'] = (int)$attr['category_id'];
 	return get_category_link( $attr['category_id'] );
@@ -366,6 +485,14 @@ function shortcode_get_category_link( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_get_tag_link( $attr ) {
+
+	$attr = wp_parse_args(
+		$attr,
+		array(
+			'tag_id' => null,
+		)
+	);
+
 	if ( isset( $attr['tag_id'] ) )
 		$attr['tag_id'] = (int)$attr['tag_id'];
 	return get_tag_link( $attr['tag_id'] );
@@ -382,6 +509,17 @@ function shortcode_get_tag_link( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_tag_cloud( $attr ) {
+
+	$attr = wp_parse_args(
+		$attr,
+		array(
+			'number'   => null,
+			'largest'  => null,
+			'smallest' => null,
+			'echo'     => null,
+		)
+	);
+
 	if ( isset( $attr['number'] ) )
 		$attr['number'] = (int)$attr['number'];
 	if ( isset( $attr['largest'] ) )
@@ -405,6 +543,16 @@ function shortcode_tag_cloud( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_the_tags( $attr ) {
+
+	$attr = wp_parse_args(
+		$attr,
+		array(
+			'before'    => null,
+			'separator' => null,
+			'after'     => null,
+		)
+	);
+
 	return get_the_tag_list( $attr['before'], $attr['separator'], $attr['after'] );
 }
 
@@ -417,6 +565,22 @@ function shortcode_the_tags( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_list_bookmarks( $attr ) {
+
+	$attr = wp_parse_args(
+		$attr,
+		array(
+			'title_li'         => null,
+			'categorize'       => null,
+			'show_description' => null,
+			'hide_invisible'   => null,
+			'show_rating'      => null,
+			'show_updated'     => null,
+			'show_images'      => null,
+			'show_private'     => null,
+			'limit'            => null,
+			'echo'             => null,
+		)
+	);
 
 	/*
 	* Make sure we have boolean values instead of strings when needed
@@ -456,6 +620,15 @@ function shortcode_list_bookmarks( $attr ) {
  */
 function shortcode_get_archives( $attr ) {
 
+	$attr = wp_parse_args(
+		$attr,
+		array(
+			'show_post_count' => null,
+			'limit'           => null,
+			'echo'            => null,
+		)
+	);
+
 	/*
 	* Make sure certain we have boolean values instead of strings when needed
 	*/
@@ -480,6 +653,14 @@ function shortcode_get_archives( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_bloginfo( $attr ) {
+
+	$attr = wp_parse_args(
+		$attr,
+		array(
+			'show' => null,
+		)
+	);
+
 	return get_bloginfo( $attr['show'], 'display' );
 }
 
@@ -502,6 +683,14 @@ function shortcode_allowed_tags() {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_logout_url( $attr ) {
+
+	$attr = wp_parse_args(
+		$attr,
+		array(
+			'redirect' => null,
+		)
+	);
+
 	$redirect = ( is_array( $attr ) && isset( $attr['redirect'] ) ) ? $attr['redirect'] : null;
 
 	return wp_logout_url( $redirect );
@@ -515,6 +704,14 @@ function shortcode_logout_url( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_login_url( $attr ) {
+
+	$attr = wp_parse_args(
+		$attr,
+		array(
+			'redirect' => null,
+		)
+	);
+
 	$redirect = ( is_array( $attr ) && isset( $attr['redirect'] ) ) ? $attr['redirect'] : null;
 
 	return wp_login_url( $redirect );
@@ -556,6 +753,16 @@ function shortcode_the_title( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_the_title_attribute( $attr ) {
+
+	$attr = wp_parse_args(
+		$attr,
+		array(
+			'echo' => null,
+			'before' => null,
+			'after' => null,
+		)
+	);
+
 	$attr['echo'] = false;
 	return the_title_attribute( array( 'before' => $attr['before'], 'after' => $attr['after'], 'echo' => $attr['echo'] ) );
 }
@@ -582,6 +789,14 @@ function shortcode_the_permalink() {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_get_permalink( $attr ) {
+
+	$attr = wp_parse_args(
+		$attr,
+		array(
+			'id' => null,
+		)
+	);
+
 	return get_permalink( $attr['id'] );
 }
 
@@ -610,6 +825,13 @@ function shortcode_the_date( $attr ) {
  */
 function shortcode_the_time( $attr ) {
 
+	$attr = wp_parse_args(
+		$attr,
+		array(
+			'format' => null,
+		)
+	);
+
 	$format = ( is_array( $attr ) && isset( $attr['format'] ) ) ? $attr['format'] : null;
 
 	return get_the_time( $format );
@@ -624,6 +846,13 @@ function shortcode_the_time( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_the_modified_date( $attr ) {
+
+	$attr = wp_parse_args(
+		$attr,
+		array(
+			'format' => null,
+		)
+	);
 
 	$format = ( is_array( $attr ) && isset( $attr['format'] ) ) ? $attr['format'] : null;
 
@@ -640,6 +869,13 @@ function shortcode_the_modified_date( $attr ) {
  */
 function shortcode_the_modified_time( $attr ) {
 
+	$attr = wp_parse_args(
+		$attr,
+		array(
+			'format' => null,
+		)
+	);
+
 	$format = ( is_array( $attr ) && isset( $attr['format'] ) ) ? $attr['format'] : null;
 
 	return get_the_modified_time( $format );
@@ -654,6 +890,17 @@ function shortcode_the_modified_time( $attr ) {
  * @param array $attr Attributes attributed to the shortcode.
  */
 function shortcode_list_authors( $attr) {
+
+	$attr = wp_parse_args(
+		$attr,
+		array(
+			'optioncount'   => null,
+			'exclude_admin' => null,
+			'show_fullname' => null,
+			'hide_empty'    => null,
+			'echo'          => null,
+		)
+	);
 
 	/*
 	* Make sure we have boolean values instead of strings when needed
